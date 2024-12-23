@@ -13,14 +13,31 @@ export default function Canvas({
   draw,
   stopDrawing,
 }: CanvasProps) {
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    startDrawing(e);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    draw(e);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    stopDrawing();
+  };
+
   return (
     <canvas
       ref={canvasRef}
-      onMouseDown={startDrawing}
-      onMouseMove={draw}
-      onMouseUp={stopDrawing}
-      onMouseLeave={stopDrawing}
-      style={{border: "2px solid black"}}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      className="border-2 border-black rounded-lg"
+      width={800}
+      height={600}
     />
   );
 }

@@ -10,6 +10,8 @@ interface ToolbarProps {
   tool: ToolType;
   setTool: Dispatch<SetStateAction<ToolType>>;
   clearCanvas: () => void;
+  lineWidth: number;
+  setLineWidth: (width: number) => void;
 }
 
 export default function Toolbar({
@@ -18,6 +20,8 @@ export default function Toolbar({
   tool,
   setTool,
   clearCanvas,
+  setLineWidth,
+  lineWidth,
 }: ToolbarProps) {
   return (
     <div className="flex items-center justify-between w-full p-4 bg-gray-100 rounded-lg mb-4">
@@ -117,6 +121,47 @@ export default function Toolbar({
               onClick={() => setTool("square1")}
             >
               <div className="w-1 h-1 bg-black" />
+            </button>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 bg-white p-2 rounded-md">
+            <label htmlFor="lineWidth" className="text-sm text-gray-600">
+              Stroke width:
+            </label>
+            <input
+              type="number"
+              id="lineWidth"
+              min="1"
+              max="50"
+              value={lineWidth}
+              onChange={(e) => setLineWidth(Number(e.target.value))}
+              className="w-16 px-2 py-1 border rounded text-sm"
+            />
+            <span className="text-sm text-gray-500">px</span>
+          </div>
+
+          <div className="flex gap-2">
+            {[1, 2, 4, 8, 16].map((width) => (
+              <button
+                key={width}
+                onClick={() => setLineWidth(width)}
+                className={`px-3 py-1 rounded ${
+                  lineWidth === width
+                    ? "bg-black text-white"
+                    : "bg-gray-200 hover:bg-gray-300"
+                }`}
+              >
+                {width}px
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <button
+              className="px-3 py-1 rounded bg-black text-white"
+              onClick={() => setLineWidth(2)}
+            >
+              Reset
             </button>
           </div>
         </div>
@@ -235,15 +280,15 @@ export default function Toolbar({
               } hover:bg-white transition-all`}
               onClick={() => setTool("dottedLine16")}
             >
-              <div className="w-6 h-6 flex items-center justify-center">
-                <div
-                  className="w-full h-[2px] bg-black"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right, black 50%, transparent 50%)",
-                    backgroundSize: "8px 100%",
-                  }}
-                />
+              <div className="w-6 h-6 flex items-center justify-center relative">
+                <div className="absolute w-8 h-[2px] transform rotate-[135deg] flex justify-between">
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-[2px] h-[2px] rounded-full bg-black"
+                    />
+                  ))}
+                </div>
               </div>
             </button>
           </div>
