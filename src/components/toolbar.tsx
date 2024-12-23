@@ -1,5 +1,5 @@
 import React from "react";
-import { Eraser } from "lucide-react";
+import { Eraser, PaintBucket } from "lucide-react";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 import { ToolType } from "types";
@@ -310,6 +310,14 @@ export default function Toolbar({
               onChange={(e) => setColor(e.target.value)}
               className="w-12 h-12 rounded-lg cursor-pointer"
             />
+            <button
+              className={`p-4 rounded-lg shadow-sm ${
+                tool === "bucket" ? "bg-white ring-2 ring-black" : "bg-gray-50"
+              } hover:bg-white transition-all`}
+              onClick={() => setTool("bucket")}
+            >
+              <PaintBucket size={24} />
+            </button>
             <button
               className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
               onClick={clearCanvas}

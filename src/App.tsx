@@ -3,6 +3,7 @@ import "./App.css";
 import Canvas from "components/Canvas";
 import Toolbar from "components/Toolbar";
 import { ToolType } from "types";
+import { floodFill } from "utils/fill";
 export default function App() {
   const [color, setColor] = useState("#000000");
   const [tool, setTool] = useState<ToolType>("pencil1");
@@ -65,7 +66,9 @@ export default function App() {
 
     if (contextRef.current) {
       contextRef.current.save();
-      if (tool.startsWith("pencil")) {
+      if (tool === "bucket") {
+        floodFill(contextRef.current, offsetX, offsetY, color);
+      } else if (tool.startsWith("pencil")) {
         contextRef.current.globalCompositeOperation = "source-over";
         contextRef.current.strokeStyle = color;
         const size = parseInt(tool.replace("pencil", ""));

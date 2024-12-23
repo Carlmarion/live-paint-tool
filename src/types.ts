@@ -10,6 +10,7 @@ export type ToolType =
   | "square12"
   | "square24"
   | "eraser"
+  | "bucket"
   | "verticalLine16"
   | "verticalLine8"
   | "verticalLine4"
