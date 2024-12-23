@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import Toolbar from "./components/toolbar.tsx";
-import Canvas from "./components/canvas.tsx";
-
+import Canvas from "components/Canvas";
+import Toolbar from "components/Toolbar";
+import { ToolType } from "types";
 export default function App() {
   const [color, setColor] = useState("#000000");
-  const [tool, setTool] = useState("pencil");
+  const [tool, setTool] = useState<ToolType>("pencil1");
   const [isDrawing, setIsDrawing] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null!) as React.RefObject<HTMLCanvasElement>;
+  const canvasRef = useRef<HTMLCanvasElement>(
+    null!,
+  ) as React.RefObject<HTMLCanvasElement>;
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
   useEffect(() => {
@@ -22,12 +24,12 @@ export default function App() {
         context.strokeStyle = color;
         context.lineWidth = 5;
         contextRef.current = context;
-        
-        // Fill canvas with white background initially
+
         context.fillStyle = "white";
         context.fillRect(0, 0, canvas.width, canvas.height);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update color when it changes
@@ -49,16 +51,85 @@ export default function App() {
   const draw = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return;
     const { offsetX, offsetY } = event.nativeEvent;
-    
+
     if (contextRef.current) {
-      if (tool === "pencil") {
+      if (tool.startsWith("pencil")) {
         contextRef.current.globalCompositeOperation = "source-over";
         contextRef.current.strokeStyle = color;
+        const size = parseInt(tool.replace("pencil", ""));
+        contextRef.current.lineWidth = size;
+      } else if (tool.startsWith("square")) {
+        contextRef.current.globalCompositeOperation = "source-over";
+        contextRef.current.fillStyle = color;
+        const size = parseInt(tool.replace("square", ""));
+        contextRef.current.fillRect(
+          offsetX - size / 2,
+          offsetY - size / 2,
+          size,
+          size,
+        );
       } else if (tool === "eraser") {
         contextRef.current.globalCompositeOperation = "destination-out";
+      } else if (tool.startsWith("verticalLine")) {
+        contextRef.current.globalCompositeOperation = "source-over";
+        contextRef.current.strokeStyle = color;
+        const size = parseInt(tool.replace("verticalLine", ""));
+        contextRef.current.beginPath();
+        const startY = offsetY - size;
+        const endY = offsetY + size;
+        contextRef.current.moveTo(offsetX, startY);
+        contextRef.current.lineTo(offsetX, endY);
+        contextRef.current.stroke();
+      } else if (tool.startsWith("diagonalLine")) {
+        contextRef.current.globalCompositeOperation = "source-over";
+        contextRef.current.strokeStyle = color;
+        const size = parseInt(tool.replace("diagonalLine", ""));
+        contextRef.current.beginPath();
+        contextRef.current.moveTo(offsetX - size, offsetY - size);
+        contextRef.current.lineTo(offsetX + size, offsetY + size);
+        contextRef.current.stroke();
+        contextRef.current.globalCompositeOperation = "source-over";
+        contextRef.current.strokeStyle = color;
+      } else if (tool.startsWith("horizontalLine")) {
+        const size = parseInt(tool.replace("horizontalLine", ""));
+        contextRef.current.beginPath();
+        contextRef.current.moveTo(offsetX - size, offsetY);
+        contextRef.current.lineTo(offsetX + size, offsetY);
+        contextRef.current.stroke();
+      } else if (tool.startsWith("dottedLine")) {
+        contextRef.current.globalCompositeOperation = "source-over";
+        contextRef.current.fillStyle = color; // Use fillStyle instead of strokeStyle for dots
+        const size = parseInt(tool.replace("dottedLine", ""));
+        const startX = offsetX - size;
+        const startY = offsetY - size;
+        const endX = offsetX + size;
+        const endY = offsetY + size;
+        const lineLength = Math.sqrt(
+          Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2),
+        );
+
+        const spacing = 6;
+        const dotSize = 1;
+
+        const numDots = Math.floor(lineLength / spacing);
+
+        contextRef.current.save();
+
+        contextRef.current.beginPath();
+
+        for (let i = 0; i <= numDots; i++) {
+          const t = i / numDots;
+          const x = startX + (endX - startX) * t;
+          const y = startY + (endY - startY) * t;
+
+          contextRef.current.beginPath();
+          contextRef.current.arc(x, y, dotSize, 0, Math.PI * 2);
+          contextRef.current.fill();
+          contextRef.current.closePath();
+        }
+
+        contextRef.current.restore();
       }
-      contextRef.current.lineTo(offsetX, offsetY);
-      contextRef.current.stroke();
     }
   };
 

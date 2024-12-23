@@ -1,0 +1,4 @@
+// Finish to make all the brushes different sizes 5 rounds 5 squares a few lines ones and some scattered.
+// Create the Draggable little menu bar and include the brushes in it
+// make a draggable pannel that can contain any tools
+// make the tools like selection, magic wand etc (ref cloudpaint)
