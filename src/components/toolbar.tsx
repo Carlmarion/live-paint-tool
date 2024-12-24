@@ -12,6 +12,8 @@ interface ToolbarProps {
   clearCanvas: () => void;
   lineWidth: number;
   setLineWidth: (width: number) => void;
+  fillTolerance: number;
+  setFillTolerance: Dispatch<SetStateAction<number>>;
 }
 
 export default function Toolbar({
@@ -22,6 +24,8 @@ export default function Toolbar({
   clearCanvas,
   setLineWidth,
   lineWidth,
+  fillTolerance,
+  setFillTolerance,
 }: ToolbarProps) {
   return (
     <div className="flex items-center justify-between w-full p-4 bg-gray-100 rounded-lg mb-4">
@@ -310,14 +314,31 @@ export default function Toolbar({
               onChange={(e) => setColor(e.target.value)}
               className="w-12 h-12 rounded-lg cursor-pointer"
             />
-            <button
-              className={`p-4 rounded-lg shadow-sm ${
-                tool === "bucket" ? "bg-white ring-2 ring-black" : "bg-gray-50"
-              } hover:bg-white transition-all`}
-              onClick={() => setTool("bucket")}
-            >
-              <PaintBucket size={24} />
-            </button>
+            <div className="flex gap-2 items-center">
+              <button
+                className={`p-4 rounded-lg shadow-sm ${
+                  tool === "bucket"
+                    ? "bg-white ring-2 ring-black"
+                    : "bg-gray-50"
+                } hover:bg-white transition-all`}
+                onClick={() => setTool("bucket")}
+              >
+                <PaintBucket size={24} />
+              </button>
+              <div className="flex flex-col gap-1">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={fillTolerance}
+                  onChange={(e) => setFillTolerance(Number(e.target.value))}
+                  className="w-24 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                />
+                <span className="text-xs text-black text-center">
+                  Tolerance: {fillTolerance}
+                </span>
+              </div>
+            </div>
             <button
               className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
               onClick={clearCanvas}
@@ -330,4 +351,3 @@ export default function Toolbar({
     </div>
   );
 }
-// TODO: Add a paintbrush tool to chose the size and shape of the brush

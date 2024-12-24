@@ -7,8 +7,10 @@ import { floodFill } from "utils/fill";
 export default function App() {
   const [color, setColor] = useState("#000000");
   const [tool, setTool] = useState<ToolType>("pencil1");
+  const [fillTolerance, setFillTolerance] = useState(32);
   const [lineWidth, setLineWidth] = useState(2);
   const [isDrawing, setIsDrawing] = useState(false);
+
   const canvasRef = useRef<HTMLCanvasElement>(
     null!,
   ) as React.RefObject<HTMLCanvasElement>;
@@ -67,7 +69,7 @@ export default function App() {
     if (contextRef.current) {
       contextRef.current.save();
       if (tool === "bucket") {
-        floodFill(contextRef.current, offsetX, offsetY, color);
+        floodFill(contextRef.current, offsetX, offsetY, color, fillTolerance);
       } else if (tool.startsWith("pencil")) {
         contextRef.current.globalCompositeOperation = "source-over";
         contextRef.current.strokeStyle = color;
@@ -115,6 +117,35 @@ export default function App() {
         contextRef.current.moveTo(offsetX - size, offsetY);
         contextRef.current.lineTo(offsetX + size, offsetY);
         contextRef.current.stroke();
+      } else if (tool.startsWith("dottedLine")) {
+        contextRef.current.globalCompositeOperation = "source-over";
+        contextRef.current.fillStyle = color;
+        const size = parseInt(tool.replace("dottedLine", ""));
+        const startX = offsetX - size;
+        const startY = offsetY - size;
+        const endX = offsetX + size;
+        const endY = offsetY + size;
+        const lineLength = Math.sqrt(
+          Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2),
+        );
+
+        const spacing = 6;
+        const dotSize = 1;
+
+        const numDots = Math.floor(lineLength / spacing);
+
+        contextRef.current.beginPath();
+
+        for (let i = 0; i <= numDots; i++) {
+          const t = i / numDots;
+          const x = startX + (endX - startX) * t;
+          const y = startY + (endY - startY) * t;
+
+          contextRef.current.beginPath();
+          contextRef.current.arc(x, y, dotSize, 0, Math.PI * 2);
+          contextRef.current.fill();
+          contextRef.current.closePath();
+        }
       } else if (tool === "eraser") {
         contextRef.current.globalCompositeOperation = "destination-out";
         contextRef.current.lineWidth = lineWidth;
@@ -151,6 +182,8 @@ export default function App() {
           clearCanvas={clearCanvas}
           lineWidth={lineWidth}
           setLineWidth={setLineWidth}
+          fillTolerance={fillTolerance}
+          setFillTolerance={setFillTolerance}
         />
         <div className="mt-6 flex justify-center">
           <Canvas

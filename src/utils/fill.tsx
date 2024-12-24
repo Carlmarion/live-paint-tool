@@ -38,7 +38,7 @@ export function floodFill(
   startX: number,
   startY: number,
   fillColor: string,
-  tolerance: number = 0,
+  tolerance: number = 32,
 ): void {
   const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
   const pixels = imageData.data;
@@ -83,6 +83,10 @@ export function floodFill(
     if (x < width - 1) stack.push([x + 1, y]);
     if (y > 0) stack.push([x, y - 1]);
     if (y < height - 1) stack.push([x, y + 1]);
+    if (x > 0 && y > 0) stack.push([x - 1, y - 1]);
+    if (x < width - 1 && y > 0) stack.push([x + 1, y - 1]);
+    if (x > 0 && height - 1) stack.push([x - 1, y + 1]);
+    if (x < width - 1 && y < height - 1) stack.push([x + 1, y + 1]);
   }
 
   ctx.putImageData(imageData, 0, 0);
