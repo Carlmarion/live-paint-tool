@@ -4,7 +4,7 @@ import { Rnd } from "react-rnd";
 interface MovableMenuProps {
   children: React.ReactNode;
   initialPosition: { x: number; y: number };
-  bounds?: string | HTMLElement;
+  bounds?: string | HTMLElement | undefined;
   title?: string;
 }
 
@@ -28,7 +28,7 @@ export default function MovableMenu({
         width: 140,
         height: totalHeight,
       }}
-      bounds={bounds}
+      bounds="parent"
       enableResizing={false}
       style={{
         background: "#f0f0f0",

@@ -38,6 +38,7 @@ export default function Canvas({
       className="border-2 border-black rounded-lg"
       width={800}
       height={600}
+      style={{ touchAction: "none" }}
     />
   );
 }

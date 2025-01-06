@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import Canvas from "components/Canvas";
-import Toolbar from "components/Toolbar";
-import { ToolType } from "types";
+import Canvas from "components/canvas/Canvas";
+import ToolMenus from "./components/menus/index";
+import { ToolType } from "types/index";
 import { floodFill } from "utils/fill";
 export default function App() {
   const [color, setColor] = useState("#000000");
@@ -15,6 +15,7 @@ export default function App() {
     null!,
   ) as React.RefObject<HTMLCanvasElement>;
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -174,24 +175,27 @@ export default function App() {
     <div className="min-h-screen w-full bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl">
         <h1 className="text-2xl font-bold mb-6 text-center">Canvas</h1>
-        <Toolbar
-          color={color}
-          setColor={setColor}
-          tool={tool}
-          setTool={setTool}
-          clearCanvas={clearCanvas}
-          lineWidth={lineWidth}
-          setLineWidth={setLineWidth}
-          fillTolerance={fillTolerance}
-          setFillTolerance={setFillTolerance}
-        />
-        <div className="mt-6 flex justify-center">
-          <Canvas
-            canvasRef={canvasRef}
-            startDrawing={startDrawing}
-            draw={draw}
-            stopDrawing={stopDrawing}
+        <div ref={canvasContainerRef} className="relative">
+          <ToolMenus
+            tool={tool}
+            setTool={setTool}
+            color={color}
+            setColor={setColor}
+            lineWidth={lineWidth}
+            setLineWidth={setLineWidth}
+            fillTolerance={fillTolerance}
+            setFillTolerance={setFillTolerance}
+            clearCanvas={clearCanvas}
+            bounds={canvasContainerRef.current}
           />
+          <div className="mt-6 flex justify-center">
+            <Canvas
+              canvasRef={canvasRef}
+              startDrawing={startDrawing}
+              draw={draw}
+              stopDrawing={stopDrawing}
+            />
+          </div>
         </div>
       </div>
     </div>
