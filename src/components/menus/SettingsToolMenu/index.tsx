@@ -27,12 +27,12 @@ export default function SettingsToolMenu({
     <MovableMenu
       bounds={bounds || undefined}
       initialPosition={initialPosition}
-      title="Settings"
+      layout="flex"
     >
-      <div className="p-4 space-y-4">
+      <div>
         <div className="bg-[#f0f0f0] p-4">
-          <div className="h-7 flex items-center justify-between">
-            <div className="text-xs">Line width</div>
+          <div className="h-6 flex items-center justify-between">
+            <div className="text-xs pr-4">Line width</div>
             <input
               type="number"
               id="lineWidth"
@@ -53,8 +53,8 @@ export default function SettingsToolMenu({
           </div>
         </div>
 
-        <div className="bg-[#f0f0f0] p-4">
-          <div className="text-xs mb-1">Tolerance: {fillTolerance}</div>
+        <div className="bg-[#f0f0f0]">
+          <div className="text-xs mb-1 pl-4">Tolerance: {fillTolerance}</div>
           <input
             type="range"
             min="0"
@@ -70,13 +70,13 @@ export default function SettingsToolMenu({
             type="color"
             value={color}
             onChange={(e) => setColor(e.target.value)}
-            className="w-12 h-12 rounded-lg cursor-pointer"
+            className="w-10 h-10 cursor-pointer"
           />
           <button
-            className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
+            className="px-2 py-2 bg-black text-sm text-white hover:bg-gray-800 transition-colors shadow-sm"
             onClick={clearCanvas}
           >
-            Clear
+            Clear canvas
           </button>
         </div>
       </div>

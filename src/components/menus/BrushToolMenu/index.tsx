@@ -8,35 +8,23 @@ interface BrushToolMenuProps {
   tool: ToolType;
   setTool: (tool: ToolType) => void;
   bounds: string | HTMLElement | null;
+  initialPosition: { x: number; y: number };
 }
 
 export default function BrushToolMenus({
   tool,
   setTool,
   bounds,
+  initialPosition,
 }: BrushToolMenuProps) {
   return (
     <>
       <MovableMenu
         bounds={bounds || undefined}
         initialPosition={{ x: 50, y: 10 }}
-        title="Brushes"
       >
         <PencilTools tool={tool} setTool={setTool} />
-      </MovableMenu>
-
-      <MovableMenu
-        bounds={bounds || undefined}
-        initialPosition={{ x: 200, y: 10 }}
-        title="Brushes"
-      >
         <SquareTools tool={tool} setTool={setTool} />
-      </MovableMenu>
-      <MovableMenu
-        bounds={bounds || undefined}
-        initialPosition={{ x: 350, y: 10 }}
-        title="Brushes"
-      >
         <LineTools tool={tool} setTool={setTool} />
       </MovableMenu>
     </>

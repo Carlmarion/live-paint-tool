@@ -16,11 +16,7 @@ export default function UtilityToolMenu({
   initialPosition,
 }: UtilityToolMenuProps) {
   return (
-    <MovableMenu
-      bounds={bounds || undefined}
-      initialPosition={initialPosition}
-      title="Utilities"
-    >
+    <MovableMenu bounds={bounds || undefined} initialPosition={initialPosition}>
       <button
         className={`flex items-center justify-center ${
           tool === "eraser" ? "bg-[#d4d4d4]" : "bg-white"

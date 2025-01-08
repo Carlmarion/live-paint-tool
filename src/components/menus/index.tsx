@@ -29,13 +29,36 @@ export default function ToolMenus({
   setFillTolerance,
   clearCanvas,
 }: ToolMenuProps) {
+  const [menuPositions, setMenuPositions] = React.useState({
+    brush: { x: window.innerWidth - 50, y: 50 },
+    utility: { x: 50, y: 50 },
+    settings: { x: 50, y: 150 },
+  });
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setMenuPositions({
+        brush: { x: window.innerWidth - 50, y: 50 },
+        utility: { x: 50, y: 50 },
+        settings: { x: 50, y: 150 },
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
-      <BrushToolMenu tool={tool} setTool={setTool} bounds={bounds} />
+      <BrushToolMenu
+        initialPosition={menuPositions.brush}
+        tool={tool}
+        setTool={setTool}
+        bounds={bounds}
+      />
       <UtilityToolMenu
         tool={tool}
         setTool={setTool}
-        initialPosition={{ x: 600, y: 50 }}
+        initialPosition={menuPositions.utility}
         bounds={bounds}
       />
       <SettingsToolMenu
@@ -46,7 +69,7 @@ export default function ToolMenus({
         clearCanvas={clearCanvas}
         lineWidth={lineWidth}
         setLineWidth={setLineWidth}
-        initialPosition={{ x: 600, y: 200 }}
+        initialPosition={menuPositions.settings}
         bounds={bounds}
       />
     </>

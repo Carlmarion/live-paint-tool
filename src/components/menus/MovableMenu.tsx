@@ -5,30 +5,24 @@ interface MovableMenuProps {
   children: React.ReactNode;
   initialPosition: { x: number; y: number };
   bounds?: string | HTMLElement | undefined;
-  title?: string;
+  layout?: "grid" | "flex";
 }
 
 export default function MovableMenu({
   children,
   initialPosition = { x: 50, y: 50 },
   bounds,
-  title,
+  layout = "grid",
 }: MovableMenuProps) {
-  const childrenCount = React.Children.count(children);
-  const rows = Math.ceil(childrenCount / 5);
-  const headerHeight = 32;
-  const buttonHeight = 28;
-
-  const totalHeight = headerHeight + rows * buttonHeight;
   return (
     <Rnd
       default={{
         x: initialPosition.x,
         y: initialPosition.y,
-        width: 140,
-        height: totalHeight,
+        width: "auto",
+        height: "auto",
       }}
-      bounds="parent"
+      bounds="window"
       enableResizing={false}
       style={{
         background: "#f0f0f0",
@@ -42,15 +36,18 @@ export default function MovableMenu({
           className="bg-[#d4d4d4] p-2 cursor-move border-b border-[#808080] flex items-center"
           style={{ touchAction: "none" }}
         ></div>
-
-        <div
-          className="grid grid-cols-5 [&>*]:w-7 [&>*]:h-7"
-          style={{
-            gap: 0,
-          }}
-        >
-          {children}
-        </div>
+        {layout === "grid" ? (
+          <div
+            className="grid grid-cols-5 [&>*]:w-7 [&>*]:h-7"
+            style={{
+              gap: 0,
+            }}
+          >
+            {children}
+          </div>
+        ) : (
+          <div className="flex flex-col">{children}</div>
+        )}
       </div>
     </Rnd>
   );
